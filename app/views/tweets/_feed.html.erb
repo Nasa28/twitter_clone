@@ -20,8 +20,8 @@
       </div>
       <div class="media-content">
         <div class="content">
-          <strong>Kalu chinasa<strong><br>
-          <small>@nasa</small><br>
+          <strong><%= tweet.user.name if tweet.user%><strong><br>
+          <small><%= tweet.user.username if tweet.user%></small><br>
           <p><%= tweet.tweet%> </p>
         </div>
         <nav class="level">
