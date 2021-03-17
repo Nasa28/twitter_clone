@@ -1,70 +1,76 @@
-class TweetsController < ApplicationController
-  before_action :set_tweet, only: %i[ show edit update destroy ]
+class TweeetsController < ApplicationController
+  before_action :set_tweeet, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
-  # GET /tweets or /tweets.json
+  # GET /tweeets
+  # GET /tweeets.json
   def index
-    @tweets = Tweet.all.order("created_at DESC")
-    @tweet = Tweet.new
+    @tweeets = Tweeet.all.order("created_at DESC")
+    @tweeet = Tweeet.new
   end
 
-  # GET /tweets/1 or /tweets/1.json
+  # GET /tweeets/1
+  # GET /tweeets/1.json
   def show
   end
 
-  # GET /tweets/new
+  # GET /tweeets/new
   def new
-    @tweet = Tweet.new
+    @tweeet = current_user.tweeets.build
   end
 
-  # GET /tweets/1/edit
+  # GET /tweeets/1/edit
   def edit
   end
 
-  # POST /tweets or /tweets.json
+  # POST /tweeets
+  # POST /tweeets.json
   def create
-    @tweet = Tweet.new(tweet_params)
+    @tweeet = current_user.tweeets.build(tweeet_params)
 
     respond_to do |format|
-      if @tweet.save
-        format.html { redirect_to @tweet, notice: "Tweet was successfully created." }
-        format.json { render :show, status: :created, location: @tweet }
+      if @tweeet.save
+        format.html { redirect_to root_path, notice: 'Tweeet was successfully created.' }
+        format.json { render :show, status: :created, location: @tweeet }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @tweet.errors, status: :unprocessable_entity }
+        format.html { render :new }
+        format.json { render json: @tweeet.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /tweets/1 or /tweets/1.json
+  # PATCH/PUT /tweeets/1
+  # PATCH/PUT /tweeets/1.json
   def update
     respond_to do |format|
-      if @tweet.update(tweet_params)
-        format.html { redirect_to @tweet, notice: "Tweet was successfully updated." }
-        format.json { render :show, status: :ok, location: @tweet }
+      if @tweeet.update(tweeet_params)
+        format.html { redirect_to @tweeet, notice: 'Tweeet was successfully updated.' }
+        format.json { render :show, status: :ok, location: @tweeet }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @tweet.errors, status: :unprocessable_entity }
+        format.html { render :edit }
+        format.json { render json: @tweeet.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /tweets/1 or /tweets/1.json
+  # DELETE /tweeets/1
+  # DELETE /tweeets/1.json
   def destroy
-    @tweet.destroy
+    @tweeet.destroy
     respond_to do |format|
-      format.html { redirect_to tweets_url, notice: "Tweet was successfully destroyed." }
+      format.html { redirect_to tweeets_url, notice: 'Tweeet was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_tweet
-      @tweet = Tweet.find(params[:id])
+    def set_tweeet
+      @tweeet = Tweeet.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
-    def tweet_params
-      params.require(:tweet).permit(:tweet)
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def tweeet_params
+      params.require(:tweeet).permit(:tweeet)
     end
 end
